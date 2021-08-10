@@ -164,8 +164,7 @@ jobs:
       id: artifactory
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_ARTIFACTORY == 'true' && !cancelled()
       run: |
-        curl -u${{ secrets.ARTIFACTORY_TOKEN }} -T  ${FIRMWARE} 
-        "${{ secrets.ARTIFACTORY_REPO_URL }}/${FIRMWARE}"
+        curl -u${{ secrets.ARTIFACTORY_TOKEN }} -T  ${FIRMWARE} "${{ secrets.ARTIFACTORY_REPO_URL }}/${FIRMWARE}"
 
     - name: Generate release tag
       id: tag
