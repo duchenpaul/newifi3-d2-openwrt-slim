@@ -166,7 +166,7 @@ jobs:
         FIRMWARE_ZIP=OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}.zip
         FIRMWARE_ZIP_PATH=/tmp/${FIRMWARE_ZIP}
         cd /home/runner/work/newifi3-d2-openwrt-slim/newifi3-d2-openwrt-slim/openwrt/bin/targets/ramips/mt7621
-        zip -jr ${FIRMWARE_ZIP_PATH}  mt7621
+        zip -jr ${FIRMWARE_ZIP_PATH}  *
         echo "FIRMWARE_ZIP_PATH=${FIRMWARE_ZIP_PATH}" >> $GITHUB_ENV
         echo "FIRMWARE_ZIP=${FIRMWARE_ZIP}" >> $GITHUB_ENV
 
