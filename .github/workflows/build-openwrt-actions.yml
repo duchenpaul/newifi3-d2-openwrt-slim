@@ -160,12 +160,22 @@ jobs:
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
 
+    - name: Pack the firmware
+      id: zip
+      run: |
+        FIRMWARE_ZIP=OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}.zip
+        FIRMWARE_ZIP_PATH=/tmp/${FIRMWARE_ZIP}
+        cd /home/runner/work/newifi3-d2-openwrt-slim/newifi3-d2-openwrt-slim/openwrt/bin/targets/ramips/mt7621
+        zip -jr ${FIRMWARE_ZIP_PATH}  mt7621
+        echo "FIRMWARE_ZIP_PATH=${FIRMWARE_ZIP_PATH}" >> $GITHUB_ENV
+        echo "FIRMWARE_ZIP=${FIRMWARE_ZIP}" >> $GITHUB_ENV
+
     - name: Upload firmware to my artifactory
       id: artifactory
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_ARTIFACTORY == 'true' && !cancelled()
       run: |
-        echo ${FIRMWARE}
-        curl -u${{ secrets.ARTIFACTORY_TOKEN }} -T  ${FIRMWARE} "${{ secrets.ARTIFACTORY_REPO_URL }}/${FIRMWARE}" >/dev/null 2>&1
+        echo ${FIRMWARE_ZIP_PATH}
+        curl -u${{ secrets.ARTIFACTORY_TOKEN }} -T  ${FIRMWARE_ZIP_PATH} "${{ secrets.ARTIFACTORY_REPO_URL }}/${FIRMWARE_ZIP}" >/dev/null 2>&1
 
     - name: Generate release tag
       id: tag
